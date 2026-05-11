@@ -10,6 +10,6 @@ public class WeatherForecast
 
     public string? Commentary { get; set; }
 
-    //public string? ReportedBy { get; set; }
+    public string? ReportedBy { get; set; }
 
 }

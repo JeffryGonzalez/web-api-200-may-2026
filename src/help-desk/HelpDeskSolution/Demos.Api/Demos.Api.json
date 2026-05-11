@@ -5,7 +5,7 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/get-the-status": {
+    "/status": {
       "get": {
         "tags": [
           "Demos.Api"
@@ -90,6 +90,12 @@
             "format": "int32"
           },
           "commentary": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "reportedBy": {
             "type": [
               "null",
               "string"

@@ -21,5 +21,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 
-app.MapGet("/get-the-status", () => "Looks Good!");
+app.MapGet("/status", () => "Looks Good!");
 app.Run();
+

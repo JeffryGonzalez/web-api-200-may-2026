@@ -22,21 +22,7 @@ Operands:
 - A description of the issue
 - An impact level - Question | Inconvenience | WorkStoppage
 
-
-- Resource (URI) /tacos
-- What is the Method? POST 
-- What is the representation? (data they send in the body)
-
-"employee/problems" - "what is 'employee'"?  "Store" archetype
-
-- Collections
-- Documents
-- Stores - maintaining client state on the server, weird description, but this is it
-- Controllers - more on this later, but it isn't a controller in our API.
-
-
-
-
+```http
 POST /employee/problems
 Authorization: token identity token from the IDP the WHO IS DOING THIS QUESTION.
 Content-Type: application/json
@@ -46,6 +32,7 @@ Content-Type: application/json
    "description": "...",
    "impact": "WorkStoppage"
 }
+```
 
 // what do I return from this?
 
@@ -60,23 +47,62 @@ The employee ID here can be ANYTHING WE WANT IT TO BE IN OUR SYSTEM
 - An Alias. 
 
 
+```http
 201 Created
-Location: /employees/{guid}/issues/{guidId}
+Location: /employees/{employeeId}/problems/{issueId}
+Content-Type: application/json 
 
 {
     "reported": "{datetimeoffset}",
-    "id": "id",
-    "issue": {
-            
+    "id": "{issueId}",
+    "reportedIssue": {           
         "softwareId": "{guid}",
         "description": "...",
         "impact": "WorkStoppage"
-
     },
-    "status": "Approved - Waiting Tier 1 Assignment"
-    
+    "status": "Submitted"
 }
+```
 
+
+### Enrichment
+
+#### Check if Software Exists (`CheckForSupportedSoftware(guid ProblemId, guid SoftwareId)`)
+
+```csharp 
+public record SoftwareVerified(string Title, string Manufacturer);
+
+public record SoftwareRetired(DateTimeOffset RetiredDate);
+
+public record UnknownSoftware();
+```
+
+#### Check if Submitter is Vip (`CheckForVipStatus(guid ProblemId, string EmployeeId)`)
+
+```csharp
+public record SubmitterIsVip();
+
+public record SubmitterIsNotVip();
+```
+
+### Assignment
+
+Once the software is verified and vip status is ascertained, problem is sent to assignment.
+
+Assignment performs triage according to the triage rules, and assigns to tech (tier1 - tier3 and "concierge" for VIP with work stoppage, etc.)
+
+- tier1 - non work stoppage for non supported software - no employee augmentation
+- tier2 - work stoppage for non-supported software  - employee augmentation
+- tier3 - work stoppage for supported software - employee augmentation
+- concierge - any problem by a vip - employee augmentation
+
+#### Employee Augmentation:
+
+Connects employee name, email and phone to the problem submitted.
+
+
+
+## Manager Submits Issue on Employee Behalf 
 
 What if the employee can't get their browser to work to do this?
 

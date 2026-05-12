@@ -5,6 +5,8 @@ using JasperFx.Events;
 namespace HelpDesk.Api.Employee.ReadModels;
 
 public enum ProblemStatus {  Submitted, Checked, AwaitingAssignment, Assigned }
+
+// "A Projection" 
 public record EmployeeProblem
 {
     public Guid Id { get; init; }
@@ -13,6 +15,8 @@ public record EmployeeProblem
 
     public required ProblemCreateModel ReportedIssue { get; init; }
     public ProblemStatus Status { get; init; }
+
+    public bool? UnsupportedSoftware { get; init; }
 
     public static EmployeeProblem Create(IEvent<ProblemCreated> problem)
     {
@@ -24,6 +28,15 @@ public record EmployeeProblem
             Status = ProblemStatus.Submitted
         };
 
+    }
+
+    public static EmployeeProblem Apply(SoftwareRetired _, EmployeeProblem current)
+    {
+        return current with { UnsupportedSoftware = true };
+    }
+    public static EmployeeProblem Apply(SoftwareIsUnknown _, EmployeeProblem current)
+    {
+        return current with { UnsupportedSoftware = true };
     }
 }
 

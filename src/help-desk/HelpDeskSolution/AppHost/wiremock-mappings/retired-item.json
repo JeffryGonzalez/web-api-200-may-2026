@@ -1,0 +1,12 @@
+{
+
+  "Request": {
+    "Methods": [ "GET" ],
+    "Path": "/help-desk/catalog/d2a03441-2444-4453-bab3-0ad872068ff3"
+  },
+  "Response": {
+    "BodyAsJson": {
+      "retiredDate": "1969-04-20T20:53:42.805Z"
+    }
+  }
+}

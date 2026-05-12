@@ -1,4 +1,5 @@
 ﻿using HelpDesk.Api.Employee.ReadModels;
+using HelpDesk.Api.Employee.Sagas;
 using HelpDesk.Api.Services;
 using Marten;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -47,6 +48,12 @@ public static class EmployeeExtensions
                 // TODO = What about that unused employeeId parameter?
                 var response = await session.Events.AggregateStreamAsync<EmployeeProblem>(problemId);
                 return response;
+            });
+            group.MapGet("sagas", async (IDocumentSession session) =>
+            {
+                var response = await session.Query<Problem>().ToListAsync();
+                return response;
+            
             });
 
             return group;

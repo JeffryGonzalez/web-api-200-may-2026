@@ -1,3 +1,4 @@
+using HelpDesk.Api.Clients;
 using HelpDesk.Api.Employee;
 using HelpDesk.Api.Services;
 using Marten;
@@ -22,6 +23,16 @@ builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.DictionaryKeyPolicy = System.Text.Json.JsonNamingPolicy.CamelCase; 
 });
 builder.Services.AddValidation();
+
+var configedUri = builder.Configuration.GetValue<string>("SOFTWARE_CENTER_HTTP");
+var address = new Uri(configedUri);
+builder.Services.AddHttpClient<SoftwareCenterHttpClient>(client =>
+{
+    // do all your client configuration here, URI, proxy stuff, whatever.
+    client.BaseAddress = address;
+    //var uri = builder.Configuration.Get()
+
+});
 
 builder.Services.AddProblemDetails();
 // get the defaults for your "team" here.

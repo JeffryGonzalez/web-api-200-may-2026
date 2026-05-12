@@ -19,8 +19,9 @@ public static class CatalogExtensions
             vendorGroup.MapDelete("/{vendorId:guid}/catalog-items/{itemId:guid}", DeprecateCatalogItem.HandleAsync)
                 .RequireAuthorization("SoftwareCenter");
 
-            builder.MapGet("/catalog", GetAllCatalogItems.HandleAsync).RequireAuthorization();
 
+            builder.MapGet("/catalog", GetAllCatalogItems.HandleAsync).RequireAuthorization();
+         
             return builder;
         }
     }

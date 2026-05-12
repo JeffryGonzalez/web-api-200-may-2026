@@ -22,20 +22,33 @@ Operands:
 - A description of the issue
 - An impact level - Question | Inconvenience | WorkStoppage
 
+This is an unsupported software item: 5dbe643d-37e0-44f2-bc51-a71fbeb5d0b4
+
+This is a supported piece of software:
+25ff5f2d-cdaa-4a6b-96f7-f018d3f27e59
+
+This is retired Software:
+d2a03441-2444-4453-bab3-0ad872068ff3
+
 ```http
 POST https://localhost:1337/employee/problems
 Authorization: token identity token from the IDP the WHO IS DOING THIS QUESTION.
 Content-Type: application/json
 
 {
-   "softwareId": "0aa909fe-1928-4477-8988-705c314b4221",
+   "softwareId": "d2a03441-2444-4453-bab3-0ad872068ff3",
    "description": "This excel issue thing won't print help",
    "impact": "WorkStoppage"
 }
 ```
 
 ```http
-GET https://localhost:1337/employee/x0039/problems/d27e8bb2-f725-4bcf-b3fc-7033a9bb9ce4
+GET https://localhost:1337/employee/x0039/problems/ce1efaf9-dc68-4e65-af17-3375df45c9db
+```
+
+
+```http
+GET https://localhost:1337/employee/sagas
 ```
 
 // what do I return from this?

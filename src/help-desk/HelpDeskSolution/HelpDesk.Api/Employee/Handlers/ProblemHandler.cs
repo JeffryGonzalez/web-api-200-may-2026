@@ -19,27 +19,9 @@ public record SubmitterIsVip();
 
 public record SubmitterIsNotVip();
 
-public static class VipHandler
-{
-    public static async Task Handle(CheckVip command, IDocumentSession session)
-    {
-        // the code to really check is a vip - go across the network, whatever - pending.
-        session.Events.Append(command.ProblemId, new SubmitterIsVip());
-        await session.SaveChangesAsync();
-    }
-}
-
 
 public record SoftwareVerified(string Title, string Manufacturer);
 
 public record SoftwareRetired(DateTimeOffset RetiredDate);
 
 public record SoftwareIsUnknown();
-public static class SoftwareHandler
-{
-    public static async Task Handle(CheckSoftware command, IDocumentSession session)
-    {
-        session.Events.Append(command.ProblemId, new SoftwareVerified("Word", "Microsoft"));
-        await session.SaveChangesAsync();
-    }
-}

@@ -2,6 +2,10 @@
 
 namespace HelpDesk.Api.Employee.Handlers;
 
+public record SubmitterIsVip();
+
+public record SubmitterIsNotVip();
+
 public static class VipHandler
 {
     public static async Task Handle(CheckVip command, IDocumentSession session)

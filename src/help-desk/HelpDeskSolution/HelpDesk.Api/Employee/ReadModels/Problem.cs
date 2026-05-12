@@ -1,42 +1,29 @@
 ﻿using HelpDesk.Api.Employee.Handlers;
+using HelpDesk.Api.Employee.Sagas;
+using JasperFx.Events;
 
-namespace HelpDesk.Api.Employee;
+namespace HelpDesk.Api.Employee.ReadModels;
 
-public class Problem
+public enum ProblemStatus {  Submitted, Checked, AwaitingAssignment, Assigned }
+public record EmployeeProblem
 {
-    public Guid Id { get; set; }
-    public int Version { get; set; }
+    public Guid Id { get; init; }
+    public int Version { get; init; }
+    public required DateTimeOffset ReportedAt { get; init;  }
 
-    public bool IsVip { get; set; } = false;
-    public bool IsSupportedSoftware { get; set; } = false;
+    public required ProblemCreateModel ReportedIssue { get; init; }
+    public ProblemStatus Status { get; init; }
 
-    public static Problem Create(ProblemCreated problem)
+    public static EmployeeProblem Create(IEvent<ProblemCreated> problem)
     {
-        return new Problem();
-        
-    }
-    public void Apply(SubmitterIsVip _, Problem current)
-    {
-        current.IsVip = true;
-    }
-    public void Apply(SubmitterIsNotVip _, Problem current)
-    {
-        current.IsVip = false;
-    }
-    public void Apply(SoftwareVerified _, Problem current)
-    {
-        current.IsSupportedSoftware = true;
+        return new EmployeeProblem
+        {
+            Id = problem.Id,
+            ReportedAt = problem.Timestamp,
+            ReportedIssue = problem.Data.Problem,
+            Status = ProblemStatus.Submitted
+        };
+
     }
 }
 
-/*
- * POST /employee/problems
-Authorization: token identity token from the IDP the WHO IS DOING THIS QUESTION.
-Content-Type: application/json
-
-{
-   "softwareId": "{guid}",
-   "description": "...",
-   "impact": "WorkStoppage"
-}
-*/

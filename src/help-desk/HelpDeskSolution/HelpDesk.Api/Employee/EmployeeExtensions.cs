@@ -1,4 +1,5 @@
-﻿using HelpDesk.Api.Services;
+﻿using HelpDesk.Api.Employee.ReadModels;
+using HelpDesk.Api.Services;
 using Marten;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using Wolverine;
 namespace HelpDesk.Api.Employee;
 
 public enum ProblemImpacts {  Question, Inconvenience, WorkStoppage}
-public record ProblemCreate
+public record ProblemCreateModel
 {
     public required Guid SoftwareId { get; set; }
     [MinLength(10), MaxLength(500)]
@@ -16,7 +17,7 @@ public record ProblemCreate
     public required ProblemImpacts Impact { get; set; }
 }
 
-public record CreateProblem(Guid Id, EmployeeInfo Employee, ProblemCreate SubmittedProblem);
+
 
 public static class EmployeeExtensions
 {
@@ -26,7 +27,7 @@ public static class EmployeeExtensions
         {
             var group = builder.MapGroup("employee");
 
-            group.MapPost("problems", async (ProblemCreate problem, EmployeeSubMapper subMapper, IMessageBus bus) =>
+            group.MapPost("problems", async (ProblemCreateModel problem, EmployeeSubMapper subMapper, IMessageBus bus) =>
             {
                 // It is "valid" 
                 var problemId = Guid.NewGuid();
@@ -43,8 +44,9 @@ public static class EmployeeExtensions
 
             group.MapGet("/{employeeId}/problems/{problemId:guid}", async (Guid problemId, IDocumentSession session) =>
             {
-                var response = await session.Events.AggregateStreamAsync<Problem>(problemId);
-                return TypedResults.Ok(response); // should check for null
+                // TODO = What about that unused employeeId parameter?
+                var response = await session.Events.AggregateStreamAsync<EmployeeProblem>(problemId);
+                return response;
             });
 
             return group;
@@ -53,14 +55,3 @@ public static class EmployeeExtensions
 
 }
 
-/*
- * POST /employee/problems
-Authorization: token identity token from the IDP the WHO IS DOING THIS QUESTION.
-Content-Type: application/json
-
-{
-   "softwareId": "{guid}",
-   "description": "...",
-   "impact": "WorkStoppage"
-}
-*/

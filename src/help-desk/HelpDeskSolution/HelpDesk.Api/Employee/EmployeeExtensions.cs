@@ -55,6 +55,7 @@ public static class EmployeeExtensions
                 return response;
             
             });
+            group.MapGet("triaged/{id:guid}", async (Guid id, IDocumentSession session) => await session.Events.AggregateStreamAsync<ProblemAwaitingAssignment>(id));
 
             return group;
         }

@@ -38,5 +38,10 @@ public record EmployeeProblem
     {
         return current with { UnsupportedSoftware = true };
     }
+
+    public static EmployeeProblem Apply(ProblemVerified _, EmployeeProblem current)
+    {
+        return current with { Status = ProblemStatus.AwaitingAssignment };
+    }
 }
 

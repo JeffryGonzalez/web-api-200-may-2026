@@ -36,19 +36,23 @@ Authorization: token identity token from the IDP the WHO IS DOING THIS QUESTION.
 Content-Type: application/json
 
 {
-   "softwareId": "d2a03441-2444-4453-bab3-0ad872068ff3",
+   "softwareId": "25ff5f2d-cdaa-4a6b-96f7-f018d3f27e59",
    "description": "This excel issue thing won't print help",
    "impact": "WorkStoppage"
 }
 ```
 
 ```http
-GET https://localhost:1337/employee/x0039/problems/ce1efaf9-dc68-4e65-af17-3375df45c9db
+GET https://localhost:1337/employee/x0039/problems/a5b9a10f-6541-4d97-8319-a7bf788b6176
 ```
 
 
 ```http
 GET https://localhost:1337/employee/sagas
+```
+
+```http
+GET https://localhost:1337/employee/triaged/a5b9a10f-6541-4d97-8319-a7bf788b6176
 ```
 
 // what do I return from this?

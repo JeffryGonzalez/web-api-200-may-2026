@@ -9,10 +9,10 @@ public record SoftwareRetired(DateTimeOffset RetiredDate);
 
 public record SoftwareIsUnknown();
 
-public record CheckedSoftware();
+public record RecordSoftwareCheck(Guid Id);
 public static class SoftwareHandler
 {
-    public static async Task<CheckedSoftware> Handle(CheckSoftware command, IDocumentSession session, SoftwareCenterHttpClient client)
+    public static async Task<RecordSoftwareCheck> Handle(CheckSoftware command, IDocumentSession session, SoftwareCenterHttpClient client)
     {
         var response = await client.CheckForSoftwareAvailabilityAsync(command.SoftwareId);
         if(response is null)
@@ -33,7 +33,7 @@ public static class SoftwareHandler
             await session.SaveChangesAsync();
         }
 
-        return new CheckedSoftware();
+        return new RecordSoftwareCheck(command.ProblemId);
        
        
     }

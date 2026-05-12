@@ -66,6 +66,19 @@ public record ProblemAwaitingAssignment
         }};
     }
 
+    public string Level
+    {
+        get
+        {
+            if(IsVip)
+            {
+                return "Concierge";
+            }
+
+            return UnlistedSoftware is null ? "Tier1" : "Tier2";
+        }
+    }
+
 }
 
 public record SoftwareReference

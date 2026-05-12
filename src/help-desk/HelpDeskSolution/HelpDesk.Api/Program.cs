@@ -4,11 +4,19 @@ using HelpDesk.Api.Services;
 using Marten;
 using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
+using JasperFx;
 using Wolverine;
 using Wolverine.Marten;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseWolverine();
+builder.Host.ApplyJasperFxExtensions();
+builder.Host.UseWolverine(options =>
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        options.Durability.Mode = DurabilityMode.Solo;
+    }
+});
 
 //builder.Services.AddControllers().AddJsonOptions(options =>
 //{
@@ -67,4 +75,4 @@ if (app.Environment.IsDevelopment()) // simulating a kind of feature flag
     app.MapEmployeeEndpoints();
 }
 app.MapDefaultEndpoints(); // From ServiceDefaults
-app.Run();
+return await app.RunJasperFxCommands(args);

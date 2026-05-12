@@ -23,15 +23,19 @@ Operands:
 - An impact level - Question | Inconvenience | WorkStoppage
 
 ```http
-POST /employee/problems
+POST https://localhost:1337/employee/problems
 Authorization: token identity token from the IDP the WHO IS DOING THIS QUESTION.
 Content-Type: application/json
 
 {
-   "softwareId": "{guid}",
-   "description": "...",
+   "softwareId": "0aa909fe-1928-4477-8988-705c314b4221",
+   "description": "This excel issue thing won't print help",
    "impact": "WorkStoppage"
 }
+```
+
+```http
+GET https://localhost:1337/employee/x0039/problems/51bcb3c6-3cde-483b-8e18-f7db160ff63c
 ```
 
 // what do I return from this?
@@ -74,7 +78,7 @@ public record SoftwareVerified(string Title, string Manufacturer);
 
 public record SoftwareRetired(DateTimeOffset RetiredDate);
 
-public record UnknownSoftware();
+public record SoftwareIsUnknown();
 ```
 
 #### Check if Submitter is Vip (`CheckForVipStatus(guid ProblemId, string EmployeeId)`)

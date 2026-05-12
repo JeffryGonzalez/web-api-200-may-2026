@@ -4,7 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 // get the defaults for your "team" here.
 builder.AddServiceDefaults(); // From ServiceDefaults
 
-var connectionString = builder.Configuration.GetConnectionString("help-desker-db") ?? 
+var connectionString = builder.Configuration.GetConnectionString("help-desk-db") ?? 
     throw new Exception("No connection string for help desk database");
 
 builder.Services.AddMarten(options =>

@@ -55,6 +55,8 @@ builder.Services.AddHttpClient<NotificationsApi>(client =>
 // lifetime is transient, scoped, singleton
 // scoped (your default) - one per http request - anything that has to do with databases and the user that is making the request HAS to be scoped.
 // transient - I don't use this very often - just means "a new instance every time"
+
+//builder.Services.AddScoped<IDoNotifications, NotificationsApi>();
 builder.Services.AddScoped<IDoNotifications>(sp => sp.GetRequiredService<NotificationsApi>());
 // above here is configuration of services
 var app = builder.Build();

@@ -2,11 +2,19 @@ using AppHost;
 using WireMock.Client.Builders;
 var builder = DistributedApplication.CreateBuilder(args);
 
+var natsTransport = builder.AddNats("nats")
+    .WithJetStream() // event streaming support
+    .WithLifetime(ContainerLifetime.Persistent);
+
 var postgresServer = builder.AddPostgres("postgres")
-    .WithLifetime(ContainerLifetime.Persistent)
-    .WithPgAdmin();
+    .WithLifetime(ContainerLifetime.Persistent);
+    // .WithPgAdmin();
 
 //var softwareCenterService = builder.AddExternalService("software-center", "http://software-center-dev.someurl.com");
+
+    var devCommands = builder.AddProject<Projects.DevCommands>("dev-commands")
+        .WithReference(natsTransport)
+        .WithHttpCommand("/seed", "Seed Nats With Software");
 
 var mappingPath = Path.Combine(".", "wiremock-mappings");
 if(!Directory.Exists(mappingPath))
@@ -30,7 +38,18 @@ var helpdeskDatabase = postgresServer.AddDatabase("help-desk-db"); // You can ad
 var helpdeskApi = builder.AddProject<Projects.HelpDesk_Api>("help-desk")
     .WithReference(helpdeskDatabase)
     .WithReference(softwareCenterService)
+    .WithReference(natsTransport)
     .WaitFor(helpdeskDatabase)
     .WaitFor(postgresServer);
 
+var vipsApi = builder.AddProject<Projects.Vips_Api>("vips-api")
+    .WithReference(natsTransport);
+
+var gateway = builder.AddProject<Projects.Gateway>("gateway")
+    .WithReference(helpdeskApi)
+    .WithReference(vipsApi)
+    .WaitFor(helpdeskApi)
+    .WaitFor(vipsApi)
+    .WithChildRelationship(helpdeskApi)
+    .WithChildRelationship(vipsApi);
 builder.Build().Run();

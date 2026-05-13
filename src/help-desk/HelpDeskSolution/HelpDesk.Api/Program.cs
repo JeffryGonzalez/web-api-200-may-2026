@@ -52,9 +52,12 @@ var connectionString = builder.Configuration.GetConnectionString("help-desk-db")
 builder.AddNpgsqlDataSource("help-desk-db");
 builder.Services.AddMarten(options =>
 {
-  //  options.Connection(connectionString); // One Way To Do It
+    //  options.Connection(connectionString); // One Way To Do It
     options.Projections.Add<EmployeeProblemProjection>(ProjectionLifecycle.Inline);
-}).UseLightweightSessions().IntegrateWithWolverine().UseNpgsqlDataSource();
+}).UseLightweightSessions().IntegrateWithWolverine(config =>
+{
+    
+}).UseNpgsqlDataSource();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

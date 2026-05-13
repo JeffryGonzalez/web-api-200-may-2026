@@ -18,12 +18,12 @@ public class TriagedProblem : Saga
       }
    }
 
-   public static async Task<TriagedProblem> Start(StartTriage problem)
+   public static async Task<(TriagedProblem, AwaitingTriage)> Start(StartTriage problem)
    {
-      return new TriagedProblem()
+      return (new TriagedProblem()
       {
          Id = problem.Id,
-      };
+      }, new AwaitingTriage(problem.Id));
    }
 
    public void Handle(AwaitingTriage notification)

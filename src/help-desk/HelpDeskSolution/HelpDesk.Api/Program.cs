@@ -49,12 +49,12 @@ builder.AddServiceDefaults(); // From ServiceDefaults
 
 var connectionString = builder.Configuration.GetConnectionString("help-desk-db") ?? 
     throw new Exception("No connection string for help desk database");
-
+builder.AddNpgsqlDataSource("help-desk-db");
 builder.Services.AddMarten(options =>
 {
-    options.Connection(connectionString); // One Way To Do It
+  //  options.Connection(connectionString); // One Way To Do It
     options.Projections.Add<EmployeeProblemProjection>(ProjectionLifecycle.Inline);
-}).UseLightweightSessions().IntegrateWithWolverine();
+}).UseLightweightSessions().IntegrateWithWolverine().UseNpgsqlDataSource();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

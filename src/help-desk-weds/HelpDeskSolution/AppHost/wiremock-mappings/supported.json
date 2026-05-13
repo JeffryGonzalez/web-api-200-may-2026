@@ -1,0 +1,13 @@
+{
+
+  "Request": {
+    "Methods": [ "GET" ],
+    "Path": "/help-desk/catalog/25ff5f2d-cdaa-4a6b-96f7-f018d3f27e59"
+  },
+  "Response": {
+    "BodyAsJson": {
+      "title": "Claude Code",
+      "vendor":  "Anthropic"
+    }
+  }
+}

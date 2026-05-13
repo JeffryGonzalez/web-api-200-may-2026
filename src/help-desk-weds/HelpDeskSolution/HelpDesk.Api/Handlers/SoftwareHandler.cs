@@ -14,9 +14,9 @@ public record SoftwareIsUnknown();
 
 public static class SoftwareHandler
 {
-    public static async Task<RecordSoftwareCheck> Handle(CheckSoftware command, IDocumentSession session, SoftwareCenterHttpClient client)
+    public static async Task<RecordSoftwareCheck> Handle(CheckSoftware command, IDocumentSession session)
     {
-        var response = await client.CheckForSoftwareAvailabilityAsync(command.SoftwareId);
+        var response = await session.LoadAsync<SoftwareCenterItem>(command.SoftwareId);
         
         var @event = response switch
         {

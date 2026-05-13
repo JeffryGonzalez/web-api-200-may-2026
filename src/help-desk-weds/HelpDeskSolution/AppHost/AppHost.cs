@@ -7,14 +7,15 @@ var natsTransport = builder.AddNats("nats")
     .WithLifetime(ContainerLifetime.Persistent);
 
 var postgresServer = builder.AddPostgres("postgres")
-    .WithLifetime(ContainerLifetime.Persistent);
-    // .WithPgAdmin();
+    .WithLifetime(ContainerLifetime.Persistent)
+.WithPgAdmin();
 
 //var softwareCenterService = builder.AddExternalService("software-center", "http://software-center-dev.someurl.com");
 
-    var devCommands = builder.AddProject<Projects.DevCommands>("dev-commands")
-        .WithReference(natsTransport)
-        .WithHttpCommand("/seed", "Seed Nats With Software");
+var devCommands = builder.AddProject<Projects.DevCommands>("dev-commands")
+    .WithReference(natsTransport)
+    .WithHttpCommand("/seed", "Seed Nats With Software")
+    .WithHttpCommand("/retire", "Retire a Piece of Softwre");
 
 var mappingPath = Path.Combine(".", "wiremock-mappings");
 if(!Directory.Exists(mappingPath))
@@ -22,12 +23,12 @@ if(!Directory.Exists(mappingPath))
     throw new Exception("Create the mappings folder");
 }
 
-var softwareCenterService = builder.AddWireMock("software-center")
+//var softwareCenterService = builder.AddWireMock("software-center")
 
-    .WithMappingsPath(mappingPath)
-    .WithReadStaticMappings()
-    .WithWatchStaticMappings()
-    .WithApiMappingBuilder(SoftwareApiMock.Build);
+//    .WithMappingsPath(mappingPath)
+//    .WithReadStaticMappings()
+//    .WithWatchStaticMappings()
+//    .WithApiMappingBuilder(SoftwareApiMock.Build);
 
 // Above this line is Infrastructure Stuff - Tech stack choices.
 
@@ -37,7 +38,7 @@ var helpdeskDatabase = postgresServer.AddDatabase("help-desk-db"); // You can ad
 
 var helpdeskApi = builder.AddProject<Projects.HelpDesk_Api>("help-desk")
     .WithReference(helpdeskDatabase)
-    .WithReference(softwareCenterService)
+    //.WithReference(softwareCenterService)
     .WithReference(natsTransport)
     .WaitFor(helpdeskDatabase)
     .WaitFor(postgresServer);

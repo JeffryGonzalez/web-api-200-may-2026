@@ -1,16 +1,17 @@
 using HelpDesk.Api.Clients;
-using HelpDesk.Api.Services;
-using Marten;
-using Microsoft.AspNetCore.Http.Json;
-using System.Text.Json.Serialization;
 using HelpDesk.Api.Endpoints.Employee;
 using HelpDesk.Api.Endpoints.Employees;
 using HelpDesk.Api.Endpoints.Techs;
 using HelpDesk.Api.ReadModels;
+using HelpDesk.Api.Services;
 using JasperFx;
 using JasperFx.Events.Projections;
+using Marten;
+using Microsoft.AspNetCore.Http.Json;
+using System.Text.Json.Serialization;
 using Wolverine;
 using Wolverine.Marten;
+using Wolverine.Nats;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.ApplyJasperFxExtensions();
@@ -20,6 +21,13 @@ builder.Host.UseWolverine(options =>
     {
         options.Durability.Mode = DurabilityMode.Solo;
     }
+    options.UseNats(builder.Configuration.GetConnectionString("nats")!).AutoProvision().UseJetStream(js =>
+    {
+        js.MaxDeliver = 80;
+    });
+
+    options.ListenToNatsSubject("software.>").ProcessInline();
+
 });
 
 builder.Services.Configure<JsonOptions>(options =>
@@ -32,15 +40,15 @@ builder.Services.Configure<JsonOptions>(options =>
 });
 builder.Services.AddValidation();
 
-var configedUri = builder.Configuration.GetValue<string>("SOFTWARE_CENTER_HTTP");
-var address = new Uri(configedUri);
-builder.Services.AddHttpClient<SoftwareCenterHttpClient>(client =>
-{
-    // do all your client configuration here, URI, proxy stuff, whatever.
-    client.BaseAddress = address;
-    //var uri = builder.Configuration.Get()
+//var configedUri = builder.Configuration.GetValue<string>("SOFTWARE_CENTER_HTTP") ?? "";
+//var address = new Uri(configedUri);
+//builder.Services.AddHttpClient<SoftwareCenterHttpClient>(client =>
+//{
+//    // do all your client configuration here, URI, proxy stuff, whatever.
+//    client.BaseAddress = address;
+//    //var uri = builder.Configuration.Get()
 
-});
+//});
 
 builder.Services.AddProblemDetails();
 builder.Services.AddHttpContextAccessor();
@@ -80,3 +88,4 @@ if (app.Environment.IsDevelopment()) // simulating a kind of feature flag
 }
 app.MapDefaultEndpoints(); // From ServiceDefaults
 return await app.RunJasperFxCommands(args);
+

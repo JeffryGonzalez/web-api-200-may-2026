@@ -1,6 +1,6 @@
 ﻿using HelpDesk.Api.Services;
 
-namespace HelpDesk.Api.Employee;
+namespace HelpDesk.Api.Endpoints.Employee;
 
 public record CreateProblem(Guid Id, EmployeeInfo Employee, ProblemCreateModel SubmittedProblem);
 public record CheckVip(Guid ProblemId, string UserSub);

@@ -18,13 +18,7 @@ public class SoftwareCenterHttpClient(HttpClient client)
 
         var responseBody = await response.Content.ReadFromJsonAsync<SoftwareCheckResponse>();
 
-        if (responseBody != null)
-        {
-          return responseBody;
-        }
-
-        return null;
-
+        return responseBody;
     }
 
 }

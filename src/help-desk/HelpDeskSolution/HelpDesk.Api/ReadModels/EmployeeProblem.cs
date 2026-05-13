@@ -1,8 +1,10 @@
-﻿using HelpDesk.Api.Employee.Handlers;
-using HelpDesk.Api.Employee.Sagas;
+﻿using HelpDesk.Api.Endpoints.Employee;
+using HelpDesk.Api.Handlers;
+using HelpDesk.Api.Sagas;
 using JasperFx.Events;
+using Marten.Events.Aggregation;
 
-namespace HelpDesk.Api.Employee.ReadModels;
+namespace HelpDesk.Api.ReadModels;
 
 public enum ProblemStatus {  Submitted, Checked, AwaitingAssignment, Assigned }
 
@@ -11,6 +13,7 @@ public record EmployeeProblem
 {
     public Guid Id { get; init; }
     public int Version { get; init; }
+    public string EmployeeId { get; set; } = string.Empty;
     public required DateTimeOffset ReportedAt { get; init;  }
 
     public required ProblemCreateModel ReportedIssue { get; init; }
@@ -18,11 +21,17 @@ public record EmployeeProblem
 
     public bool? UnsupportedSoftware { get; init; }
 
+ 
+}
+
+public class EmployeeProblemProjection : SingleStreamProjection< EmployeeProblem, Guid>
+{
     public static EmployeeProblem Create(IEvent<ProblemCreated> problem)
     {
         return new EmployeeProblem
         {
             Id = problem.Id,
+            EmployeeId = problem.Data.Employee.EmployeeId,
             ReportedAt = problem.Timestamp,
             ReportedIssue = problem.Data.Problem,
             Status = ProblemStatus.Submitted

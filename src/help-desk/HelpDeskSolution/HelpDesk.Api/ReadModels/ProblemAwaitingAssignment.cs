@@ -1,7 +1,7 @@
-using HelpDesk.Api.Employee.Handlers;
+using HelpDesk.Api.Handlers;
 using JasperFx.Events;
 
-namespace HelpDesk.Api.Employee.ReadModels;
+namespace HelpDesk.Api.ReadModels;
 
 public record ProblemVerified(Guid Id);
 

@@ -1,10 +1,14 @@
 using HelpDesk.Api.Clients;
-using HelpDesk.Api.Employee;
 using HelpDesk.Api.Services;
 using Marten;
 using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
+using HelpDesk.Api.Endpoints.Employee;
+using HelpDesk.Api.Endpoints.Employees;
+using HelpDesk.Api.Endpoints.Techs;
+using HelpDesk.Api.ReadModels;
 using JasperFx;
+using JasperFx.Events.Projections;
 using Wolverine;
 using Wolverine.Marten;
 
@@ -18,10 +22,6 @@ builder.Host.UseWolverine(options =>
     }
 });
 
-//builder.Services.AddControllers().AddJsonOptions(options =>
-//{
-
-//});
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -43,6 +43,7 @@ builder.Services.AddHttpClient<SoftwareCenterHttpClient>(client =>
 });
 
 builder.Services.AddProblemDetails();
+builder.Services.AddHttpContextAccessor();
 // get the defaults for your "team" here.
 builder.AddServiceDefaults(); // From ServiceDefaults
 
@@ -52,13 +53,14 @@ var connectionString = builder.Configuration.GetConnectionString("help-desk-db")
 builder.Services.AddMarten(options =>
 {
     options.Connection(connectionString); // One Way To Do It
+    options.Projections.Add<EmployeeProblemProjection>(ProjectionLifecycle.Inline);
 }).UseLightweightSessions().IntegrateWithWolverine();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddScoped<EmployeeSubMapper>();
+builder.Services.AddScoped<IMapEmployeeSubsToInternalIds, FakeEmployeeSubMapper>();
 
 var app = builder.Build();
 
@@ -73,6 +75,8 @@ if (app.Environment.IsDevelopment()) // simulating a kind of feature flag
 {
 
     app.MapEmployeeEndpoints();
+    app.MapEmployeesEndpoints();
+    app.MapTechEndpoints();
 }
 app.MapDefaultEndpoints(); // From ServiceDefaults
 return await app.RunJasperFxCommands(args);

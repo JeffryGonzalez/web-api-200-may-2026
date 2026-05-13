@@ -19,6 +19,7 @@
     <ProjectReference Include="..\Gateway\Gateway.csproj" />
     <ProjectReference Include="..\HelpDesk.Api\HelpDesk.Api.csproj" />
     <ProjectReference Include="..\Vips.Api\Vips.Api.csproj" />
+    <ProjectReference Include="..\Vips.New.Api\Vips.New.Api.csproj" />
   </ItemGroup>
 
 </Project>

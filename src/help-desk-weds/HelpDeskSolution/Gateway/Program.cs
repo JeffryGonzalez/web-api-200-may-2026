@@ -6,7 +6,7 @@ builder.AddServiceDefaults();
 builder.Services.AddOpenApi();
 
 builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
-    .AddServiceDiscoveryDestinationResolver();
+    .AddServiceDiscoveryDestinationResolver(); // is if you are using aspire, with the service-name thing.
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

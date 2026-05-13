@@ -3,27 +3,25 @@ using SharedTypes;
 
 namespace HelpDesk.Api.Handlers;
 
-public record SoftwareCenterItem(Guid Id, string? Title, string? Vendor, DateTimeOffset? RetiredDate = null);
+//public record SoftwareCenterItem(Guid Id, string? Title, string? Vendor, DateTimeOffset? RetiredDate = null);
 
 
+public record SoftwareItemAdded(Guid Id, string Title, string Vendor);
+public record SoftwareItemRetired(Guid Id, DateTimeOffset RetiredOn);
 public class SoftwareCenterHandler
 {
     public async Task Handle(AddSoftwareItem item, IDocumentSession session)
     {
-        var newitem = new SoftwareCenterItem(item.Id, item.Title, item.Vendor);
-        session.Store(newitem);
+        var evt = new SoftwareItemAdded(item.Id, item.Title, item.Vendor);
+        session.Events.Append(evt.Id, evt);
+       
         await session.SaveChangesAsync();
     }
 
     public async Task Handle(RetireSoftwareItem item, IDocumentSession session)
     {
-        var savedItem = await session.LoadAsync<SoftwareCenterItem>(item.Id);
-        if(savedItem is null)
-        {
-            throw new Exception("what??");
-        }
-        var updatedItem = savedItem with { RetiredDate = item.RetiredAt, Title = null, Vendor = null };
-        session.Store(updatedItem);
+        var evt = new SoftwareItemRetired(item.Id, item.RetiredAt);
+        session.Events.Append(evt.Id, evt);
         await session.SaveChangesAsync();
     }
 }

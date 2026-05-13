@@ -46,11 +46,15 @@ var helpdeskApi = builder.AddProject<Projects.HelpDesk_Api>("help-desk")
 var vipsApi = builder.AddProject<Projects.Vips_Api>("vips-api")
     .WithReference(natsTransport);
 
+var newVips = builder.AddProject<Projects.Vips_New_Api>("vips-new-api");
 var gateway = builder.AddProject<Projects.Gateway>("gateway")
     .WithReference(helpdeskApi)
     .WithReference(vipsApi)
+    .WithReference(newVips)
     .WaitFor(helpdeskApi)
     .WaitFor(vipsApi)
     .WithChildRelationship(helpdeskApi)
-    .WithChildRelationship(vipsApi);
+    .WithChildRelationship(vipsApi)
+    .WithChildRelationship(newVips);
+
 builder.Build().Run();

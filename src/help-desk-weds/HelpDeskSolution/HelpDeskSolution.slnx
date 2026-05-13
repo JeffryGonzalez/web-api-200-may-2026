@@ -7,4 +7,5 @@
   <Project Path="ServiceDefaults/ServiceDefaults.csproj" Id="edc52bb9-6fc8-4e07-a084-248c73ac7ffb" />
   <Project Path="SharedTypes/SharedTypes.csproj" />
   <Project Path="Vips.Api/Vips.Api.csproj" />
+  <Project Path="Vips.New.Api/Vips.New.Api.csproj" />
 </Solution>

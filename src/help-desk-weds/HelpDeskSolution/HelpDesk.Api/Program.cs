@@ -1,6 +1,7 @@
 using HelpDesk.Api.Clients;
 using HelpDesk.Api.Endpoints.Employee;
 using HelpDesk.Api.Endpoints.Employees;
+using HelpDesk.Api.Endpoints.Software;
 using HelpDesk.Api.Endpoints.Techs;
 using HelpDesk.Api.ReadModels;
 using HelpDesk.Api.Services;
@@ -60,9 +61,10 @@ var connectionString = builder.Configuration.GetConnectionString("help-desk-db")
 builder.AddNpgsqlDataSource("help-desk-db");
 builder.Services.AddMarten(options =>
 {
-  //  options.Connection(connectionString); // One Way To Do It
+    //  options.Connection(connectionString); // One Way To Do It
     options.Projections.Add<EmployeeProblemProjection>(ProjectionLifecycle.Inline); // Transactionally Consistent.
-}).UseLightweightSessions().IntegrateWithWolverine().UseNpgsqlDataSource();
+    options.Projections.Add<SoftwareCenterItemProjection>(ProjectionLifecycle.Async);
+}).UseLightweightSessions().IntegrateWithWolverine().UseNpgsqlDataSource().AddAsyncDaemon(JasperFx.Events.Daemon.DaemonMode.Solo);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -85,6 +87,7 @@ if (app.Environment.IsDevelopment()) // simulating a kind of feature flag
     app.MapEmployeeEndpoints();
     app.MapEmployeesEndpoints();
     app.MapTechEndpoints();
+    app.MapSoftware();
 }
 app.MapDefaultEndpoints(); // From ServiceDefaults
 return await app.RunJasperFxCommands(args);

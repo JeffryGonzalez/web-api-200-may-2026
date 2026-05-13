@@ -1,5 +1,6 @@
 ﻿using HelpDesk.Api.Clients;
 using HelpDesk.Api.Endpoints.Employee;
+using HelpDesk.Api.ReadModels;
 using HelpDesk.Api.Sagas;
 using Marten;
 
@@ -21,7 +22,7 @@ public static class SoftwareHandler
         var @event = response switch
         {
             null => (object)new SoftwareIsUnknown(),
-            { RetiredDate: not null } => new SoftwareRetired(response.RetiredDate.Value),
+            { Retired: not null } => new SoftwareRetired(response.Retired.Value),
             { Title: not null, Vendor: not null } => new SoftwareVerified(response.Title, response.Vendor),
             _ => null
         };

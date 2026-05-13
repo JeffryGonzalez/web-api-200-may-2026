@@ -4,7 +4,7 @@ POST https://localhost:7131/messages
 Content-Type: application/json
 
 {
-  "message": "Hello Is this thing on?"
+  "message": "Another one?"
 }
 
 
@@ -16,7 +16,7 @@ POST https://localhost:7131/math
 Content-Type: application/json
 
 {
- "numbers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 99]
+ "numbers": [1, 2, 3, 4, 5, 6, 7]
 }
 
 
@@ -25,16 +25,16 @@ POST https://localhost:7131/users
 Content-Type: application/json
 
 {
- "name": "Dale Cooper"
+ "name": "Dougie"
 }
 
 ###
 GET https://localhost:7204/users
 
 ###
-PUT https://localhost:7131/users/462dd463-3dfd-41c8-be9f-52f5cb3489d0/name 
+PUT https://localhost:7131/users/a11fbee3-0fb8-4a9b-aadc-83daf5fba11b/name 
 Content-Type: application/json 
 
 {
-    "name": "Barbara Manatee"
+    "name": "Dougie"
 }

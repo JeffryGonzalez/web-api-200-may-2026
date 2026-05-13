@@ -14,7 +14,7 @@ public class TriagedProblem : Saga
    {
       get
       {
-         return $"/triaged/{Id}";
+         return $"/techs/triaged/{Id}";
       }
    }
 

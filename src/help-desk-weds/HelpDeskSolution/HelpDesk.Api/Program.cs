@@ -53,7 +53,7 @@ builder.AddNpgsqlDataSource("help-desk-db");
 builder.Services.AddMarten(options =>
 {
   //  options.Connection(connectionString); // One Way To Do It
-    options.Projections.Add<EmployeeProblemProjection>(ProjectionLifecycle.Inline);
+    options.Projections.Add<EmployeeProblemProjection>(ProjectionLifecycle.Inline); // Transactionally Consistent.
 }).UseLightweightSessions().IntegrateWithWolverine().UseNpgsqlDataSource();
 
 // Add services to the container.

@@ -43,7 +43,7 @@ public class Problem : Saga
         {
             session.Events.Append(Id, new ProblemVerified(Id));
             await session.SaveChangesAsync();
-            MarkCompleted();
+            MarkCompleted(); // is a Saga method - means we are done, delete this sucker.
             await bus.PublishAsync(new StartTriage(Id));
         }
     }

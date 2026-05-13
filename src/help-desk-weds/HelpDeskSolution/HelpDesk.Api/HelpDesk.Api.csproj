@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.Npgsql" Version="13.3.1" />
+    <PackageReference Include="Humanizer" Version="3.0.10" />
     <PackageReference Include="Marten.AspNetCore" Version="8.37.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
     <PackageReference Include="WolverineFx.Marten" Version="5.39.0" />

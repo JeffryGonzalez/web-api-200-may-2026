@@ -1,4 +1,5 @@
 using HelpDesk.Api.Handlers;
+using Humanizer;
 using JasperFx.Events;
 
 namespace HelpDesk.Api.ReadModels;
@@ -13,11 +14,11 @@ public record ProblemAwaitingAssignment
     public int Version { get; init; }
     public DateTimeOffset CreatedAt { get; init; }
 
-    public TimeSpan Active
+    public string Active
     {
         get
         {
-            return DateTimeOffset.UtcNow - CreatedAt;
+            return (DateTimeOffset.UtcNow - CreatedAt).Humanize();
         }
     }
 
